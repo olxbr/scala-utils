@@ -18,16 +18,16 @@ import org.json4s.native.Serialization._
   * The log information is converted into json format:
   *
   * {
-  *   "product":"my-product",
-  *   "application":"my-application",
-  *   "environment":"dev",
-  *   "version":"1.0",
-  *   "timestamp":1476965570596,
-  *   "level":3,
-  *   "log_type":"application",
-  *   "short_message":"Processing something",
-  *   "full_message":"Processing something with a bit more of careful",
-  *   "request_id":"9d8c7896-7e21-4921-ad50-3c8ca440a787"
+  *   "timestamp": 1476965570596,
+  *   "short_message": "Processing something",
+  *   "full_message": "Processing something with a bit more of careful",
+  *   "host": "MyMac-dev02"
+  *   "level": 3,
+  *   "_product": "my-product",
+  *   "_application": "my-application",
+  *   "_environment": "dev",
+  *   "_log_type": "application",
+  *   "_request_id": "9d8c7896-7e21-4921-ad50-3c8ca440a787"
   * }
   *
   * JSON format has emerged as the de facto standard for message passing.
