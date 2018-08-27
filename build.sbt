@@ -1,5 +1,5 @@
 name := "scala-utils"
-version := "1.0.0"
+version := "1.1.0"
 scalaVersion := "2.12.6"
 organization := "br.com.gzvr"
 crossScalaVersions := Seq("2.11.8", "2.12.6")
@@ -35,6 +35,7 @@ bintrayOrganization := Some("gzvr")
 
 libraryDependencies ++= {
   Seq(
+    "com.typesafe" % "config" % "1.3.2",
     "joda-time" % "joda-time" % "2.10",
     "org.json4s" %% "json4s-native" % "3.6.0",
     "org.scalatest" %% "scalatest" % "3.0.5" % Test

@@ -3,6 +3,7 @@ package com.grupozap.scalautils.logging
 import java.util.UUID
 
 import com.grupozap.scalautils.logging.SysLogLevel.SysLogLevel
+import com.typesafe.config.ConfigFactory
 import org.joda.time.DateTime
 import org.json4s.DefaultFormats
 import org.json4s.native.Serialization._
@@ -37,22 +38,23 @@ import org.json4s.native.Serialization._
   *
   */
 
-case class Gelf(product: String, application: String, environment: String) extends GelfTrait {
-  override def _product: String = product
-  override def _application: String = application
-  override def _environment: String = environment
+object GelfLogger extends GelfTrait {
+  override def _requestId: Option[UUID] = None
 }
 
-case class Message(product: String,
-                   application: String,
-                   environment: String,
+case class GelfLogger(requestId: UUID) extends GelfTrait {
+  override def _requestId: Option[UUID] = Some(requestId)
+}
+
+case class Message(requestId: Option[UUID] = None,
                    message: String,
-                   requestId: Option[UUID] = None,
-                   customInfo: Option[Map[String, Any]] = None,
+                   customInfo: Map[String, Any] = Map(),
                    fullMessage: Option[String] = None,
                    logLevel: SysLogLevel = SysLogLevel.INFO) {
 
   implicit val formats = DefaultFormats
+
+  val config = ConfigFactory.load()
 
   def toJson =
     write(
@@ -62,35 +64,33 @@ case class Message(product: String,
         "full_message" -> fullMessage.getOrElse(message),
         "host" -> java.net.InetAddress.getLocalHost.getHostName,
         "level" -> logLevel.id,
-        "_product" -> product,
-        "_application" -> application,
-        "_environment" -> environment,
-        "_log_type" -> "application",
+        "_product" -> config.getString("gelf.product"),
+        "_application" -> config.getString("gelf.application"),
+        "_log_type" -> config.getString("gelf.log_type"),
+        "_environment" -> config.getString("gelf.environment"),
         "_request_id" -> requestId.getOrElse(UUID.randomUUID()).toString
-      ) ++ customInfo.getOrElse(Map()).map(tuple => s"_${tuple._1}" -> tuple._2)
+      ) ++ customInfo.map(tuple => s"_${tuple._1}" -> tuple._2)
     )
 }
 
 trait GelfTrait {
 
-  def _product: String
-  def _application: String
-  def _environment: String
+  def _requestId: Option[UUID]
 
-  def info(message: String, customInfo: Option[Map[String, Any]] = None, fullMessage: Option[String] = None, requestId: Option[UUID] = None): String =
-    getMessage(message, customInfo, fullMessage, SysLogLevel.INFO, requestId)
+  def info(message: String, customInfo: Map[String, Any] = Map(), fullMessage: Option[String] = None): String =
+    getMessage(message, customInfo, fullMessage, SysLogLevel.INFO)
 
-  def debug(message: String, customInfo: Option[Map[String, Any]] = None, fullMessage: Option[String] = None, requestId: Option[UUID] = None): String =
-    getMessage(message, customInfo, fullMessage, SysLogLevel.DEBUG, requestId)
+  def debug(message: String, customInfo: Map[String, Any] = Map(), fullMessage: Option[String] = None): String =
+    getMessage(message, customInfo, fullMessage, SysLogLevel.DEBUG)
 
-  def warn(message: String, customInfo: Option[Map[String, Any]] = None, fullMessage: Option[String] = None, requestId: Option[UUID] = None): String =
-    getMessage(message, customInfo, fullMessage, SysLogLevel.WARNING, requestId)
+  def warn(message: String, customInfo: Map[String, Any] = Map(), fullMessage: Option[String] = None): String =
+    getMessage(message, customInfo, fullMessage, SysLogLevel.WARNING)
 
-  def error(message: String, customInfo: Option[Map[String, Any]] = None, fullMessage: Option[String] = None, requestId: Option[UUID] = None): String =
-    getMessage(message, customInfo, fullMessage, SysLogLevel.ERROR, requestId)
+  def error(message: String, customInfo: Map[String, Any] = Map(), fullMessage: Option[String] = None): String =
+    getMessage(message, customInfo, fullMessage, SysLogLevel.ERROR)
 
-  private def getMessage(message: String, customInfo: Option[Map[String, Any]], fullMessage: Option[String], logLevel: SysLogLevel, requestId: Option[UUID] = None):String =
-    Message(_product, _application, _environment, message, requestId, customInfo, fullMessage, logLevel).toJson
+  private def getMessage(message: String, customInfo: Map[String, Any] = Map(), fullMessage: Option[String], logLevel: SysLogLevel):String =
+    Message(_requestId, message, customInfo, fullMessage, logLevel).toJson
 }
 
 /**
