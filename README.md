@@ -7,18 +7,7 @@
 
 - **Logging**: Add features such as a configurable GELF log formatter without the need of a full Graylog connector library (https://github.com/grupozap/scala-utils/tree/master/src/main/scala/com/grupozap/scalautils/logging)
 
-## Download
-
-### Maven
-
-  ```
-<dependency>
-  <groupId>br.com.gzvr</groupId>
-  <artifactId>scala-utils_2.11</artifactId>
-  <version>1.1.0</version>
-  <type>pom</type>
-</dependency>
-```
+## Use it in your project
 
 ### SBT
 
@@ -26,15 +15,13 @@
 libraryDependencies += "br.com.gzvr" %% "scala-utils" % "1.1.0"
 ```
 
-You might need to add the Bintray repository:
+You'll need to add our JFrog repository:
 
 ```
-resolvers ++= Seq(
-  Resolver.bintrayRepo("gzvr", "maven")
-)
+resolvers += "Artifactory" at "https://squadzapquality.jfrog.io/artifactory/olxbr-sbt-release/"
 ```
 
-- Supported Scala vesions: `2.11` and `2.12`
+- Supported Scala versions: `2.11` and `2.12`
 
 ## Contributors
 
@@ -44,3 +31,11 @@ resolvers ++= Seq(
 ## Contributing
 
 If you found a bug in the source code or if you want to contribute with new features, you can help submitting an issue; even better if you can submit a pull request :)
+
+### Publish
+
+Create a `credentials.properties` file in the project's directory, with [the content you can find here])https://vault.grupozap.io/ui/vault/secrets/squad-listings/show/servicos/jfrog-quality), and run:
+```shell
+sbt clean compile package publish
+```
+

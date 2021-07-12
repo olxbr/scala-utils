@@ -30,8 +30,8 @@ developers ++= List(
 
 pomIncludeRepository := (_ => false)
 
-bintrayPackage := "scala-utils"
-bintrayOrganization := Some("gzvr")
+publishTo := Some("Artifactory Realm" at "https://squadzapquality.jfrog.io/artifactory/olxbr-sbt-release")
+credentials += Credentials(new File("credentials.properties"))
 
 libraryDependencies ++= {
   Seq(
