@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  build-and-publish:
+  build:
     docker:
       - image: hseeberger/scala-sbt:8u151-2.12.5-1.1.2
 
@@ -14,14 +14,25 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - scala-utils-dependencies-
 
-      - run: cat /dev/null | sbt test:compile
+      - run: sbt compile package
 
       - save_cache:
           paths:
             - ~/.m2
           key: scala-utils-dependencies-{{ checksum "build.sbt" }}
 
-      - run: sbt clean compile package publish
+  publish:
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - scala-utils-dependencies-{{ checksum "build.sbt" }}
+            # fallback to using the latest cache if no exact match is found
+            - scala-utils-dependencies-
+
+      - run: sbt compile package publish
+
 
 workflows:
   version: 2
@@ -29,10 +40,18 @@ workflows:
     # Make sure we keep our free JFrog repository active :)
     triggers:
       - schedule:
-          cron: "43 2 * * 4"
+          cron: "51 2 * * 4"
           filters:
             branches:
               only:
                 - circleci-project-setup
     jobs:
-      - build-and-publish
+      - build
+      - publish:
+          depends_on:
+            - build
+          filters:
+            branches:
+              only:
+                - circleci-project-setup
+
