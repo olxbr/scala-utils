@@ -35,10 +35,10 @@ jobs:
             - scala-utils-dependencies-
 
       - run:
-        name: "Publish!"
-        command: |
-          echo "${JFROG_CREDENTIALS}" > credentials.properties
-          sbt compile package publish
+          name: "Publish!"
+          command: |
+            echo "${JFROG_CREDENTIALS}" > credentials.properties
+            sbt compile package publish
 
 
 workflows:
@@ -47,7 +47,7 @@ workflows:
     # Make sure we keep our free JFrog repository active :)
     triggers:
       - schedule:
-          cron: "13 3 * * 4"
+          cron: "16 3 * * 4"
           filters:
             branches:
               only:
