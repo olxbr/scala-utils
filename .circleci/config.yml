@@ -47,11 +47,11 @@ workflows:
     # Make sure we keep our free JFrog repository active :)
     triggers:
       - schedule:
-          cron: "36 3 * * 1,4"
+          cron: "40 3 * * 1,4"
           filters:
             branches:
               only:
-                - circleci-project-setup
+                - master
     jobs:
       - build
       - publish:
@@ -60,7 +60,7 @@ workflows:
           filters:
             branches:
               only:
-                - circleci-project-setup
+                - master
 
   integration:
     jobs:
@@ -71,5 +71,5 @@ workflows:
           filters:
             branches:
               only:
-                - circleci-project-setup
+                - master
 
