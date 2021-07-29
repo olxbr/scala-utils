@@ -34,7 +34,9 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - scala-utils-dependencies-
 
-      - run: sbt compile package publish
+      - run: |
+          echo $JFROG_CREDENTIALS > credentials.properties
+          sbt compile package publish
 
 
 workflows:
