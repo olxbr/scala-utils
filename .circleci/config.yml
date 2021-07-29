@@ -35,7 +35,7 @@ jobs:
             - scala-utils-dependencies-
 
       - run: |
-          echo $JFROG_CREDENTIALS > credentials.properties
+          echo "${JFROG_CREDENTIALS}" > credentials.properties
           sbt compile package publish
 
 
