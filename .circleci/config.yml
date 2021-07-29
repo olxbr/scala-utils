@@ -1,0 +1,75 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: hseeberger/scala-sbt:8u151-2.12.5-1.1.2
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - scala-utils-dependencies-{{ checksum "build.sbt" }}
+            # fallback to using the latest cache if no exact match is found
+            - scala-utils-dependencies-
+
+      - run: sbt compile package
+
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: scala-utils-dependencies-{{ checksum "build.sbt" }}
+
+  publish:
+    docker:
+      - image: hseeberger/scala-sbt:8u151-2.12.5-1.1.2
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - scala-utils-dependencies-{{ checksum "build.sbt" }}
+            # fallback to using the latest cache if no exact match is found
+            - scala-utils-dependencies-
+
+      - run:
+          name: "Publish!"
+          command: |
+            echo "${JFROG_CREDENTIALS}" | base64 -d > credentials.properties
+            sbt compile package publish
+
+
+workflows:
+  version: 2
+  daily-build:
+    # Make sure we keep our free JFrog repository active :)
+    triggers:
+      - schedule:
+          cron: "0 20 * * 1,4"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - build
+      - publish:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - master
+
+  integration:
+    jobs:
+      - build
+      - publish:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - master
+
