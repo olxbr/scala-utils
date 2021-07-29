@@ -1,25 +1,8 @@
-# Scala CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/sample-config/ for more details
-#
 version: 2
 jobs:
-  build:
+  build-and-publish:
     docker:
-      # specify the version you desire here
-      - image: circleci/openjdk:8-jdk
-
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/postgres:9.4
-
-    working_directory: ~/repo
-
-    environment:
-      # Customize the JVM maximum heap limit
-      JVM_OPTS: -Xmx3200m
-      TERM: dumb
+      - image: hseeberger/scala-sbt:8u151-2.12.5-1.1.2
 
     steps:
       - checkout
@@ -27,16 +10,28 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "build.sbt" }}
+            - scala-utils-dependencies-{{ checksum "build.sbt" }}
             # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
+            - scala-utils-dependencies-
 
       - run: cat /dev/null | sbt test:compile
 
       - save_cache:
           paths:
             - ~/.m2
-          key: v1-dependencies--{{ checksum "build.sbt" }}
+          key: scala-utils-dependencies-{{ checksum "build.sbt" }}
 
-      # run tests!
-      - run: cat /dev/null | sbt test:test
+      - run: sbt clean compile package publish
+
+workflows:
+  daily-build:
+    # Make sure we keep our free JFrog repository active :)
+    triggers:
+      - schedule:
+          cron: "43 2 * * 4"
+          filters:
+            branches:
+              only:
+                - circleci-project-setup
+    jobs:
+      - build-and-publish
