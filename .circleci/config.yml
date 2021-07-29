@@ -22,6 +22,9 @@ jobs:
           key: scala-utils-dependencies-{{ checksum "build.sbt" }}
 
   publish:
+    docker:
+      - image: hseeberger/scala-sbt:8u151-2.12.5-1.1.2
+
     steps:
       - checkout
 
@@ -40,7 +43,7 @@ workflows:
     # Make sure we keep our free JFrog repository active :)
     triggers:
       - schedule:
-          cron: "53 2 * * 4"
+          cron: "56 2 * * 4"
           filters:
             branches:
               only:
