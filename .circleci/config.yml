@@ -55,3 +55,7 @@ workflows:
               only:
                 - circleci-project-setup
 
+  integration:
+    jobs:
+      - build
+
