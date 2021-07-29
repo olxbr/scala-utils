@@ -37,7 +37,7 @@ jobs:
       - run:
           name: "Publish!"
           command: |
-            echo "${JFROG_CREDENTIALS}" | base64 -d -o credentials.properties
+            echo "${JFROG_CREDENTIALS}" | base64 -d > credentials.properties
             sbt compile package publish
 
 
@@ -47,7 +47,7 @@ workflows:
     # Make sure we keep our free JFrog repository active :)
     triggers:
       - schedule:
-          cron: "23 3 * * 4"
+          cron: "27 3 * * 4"
           filters:
             branches:
               only:
