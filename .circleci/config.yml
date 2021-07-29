@@ -47,7 +47,7 @@ workflows:
     # Make sure we keep our free JFrog repository active :)
     triggers:
       - schedule:
-          cron: "16 3 * * 4"
+          cron: "23 3 * * 4"
           filters:
             branches:
               only:
