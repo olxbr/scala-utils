@@ -36,7 +36,7 @@ If you found a bug in the source code or if you want to contribute with new feat
 
 Once you merge your code to the master branch, [CircleCI](https://app.circleci.com/pipelines/github/olxbr/scala-utils) should automatically publish it.
 
-To publish manually, create a `credentials.properties` file in the project's directory, with [the content you can find here])https://vault.grupozap.io/ui/vault/secrets/squad-quality/show/servicos/jfrog-quality), and run:
+To publish manually, create a `credentials.properties` file in the project's directory, with [the content you can find here](https://vault.grupozap.io/ui/vault/secrets/squad-quality/show/servicos/jfrog-quality), and run:
 ```shell
 sbt clean compile package publish
 ```
