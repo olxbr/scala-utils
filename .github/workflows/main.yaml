@@ -4,6 +4,7 @@ on:
   pull_request:
   push:
     branches: [master]
+  # Make sure we keep our free JFrog repository active :)
   schedule:
     - cron: '0 20 * * 1,4'
 
