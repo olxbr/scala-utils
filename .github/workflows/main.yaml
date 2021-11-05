@@ -18,9 +18,8 @@ jobs:
           path: |
             ~/.m2
           key: ${{ runner.os }}-scala-utils-dependencies-${{ hashFiles('**/build.sbt') }}
-          restore-keys:
-            # Fallback to using any cache of the dependencies if no exact match is found.
-            - ${{ runner.os }}-scala-utils-dependencies-
+          # Fallback to using any cache of the dependencies if no exact match is found.
+          restore-keys: ${{ runner.os }}-scala-utils-dependencies-
       - name: Setup JDK with sbt
         uses: actions/setup-java@v2
         with:
@@ -38,9 +37,8 @@ jobs:
           path: |
             ~/.m2
           key: ${{ runner.os }}-scala-utils-dependencies-${{ hashFiles('**/build.sbt') }}
-          restore-keys:
-            # Fallback to using any cache of the dependencies if no exact match is found.
-            - ${{ runner.os }}-scala-utils-dependencies-
+          # Fallback to using any cache of the dependencies if no exact match is found.
+          restore-keys: ${{ runner.os }}-scala-utils-dependencies-
       - name: Publish the library
         env:
           JFROG_CREDENTIALS: ${{ secrets.JFROG_CREDENTIALS }}
