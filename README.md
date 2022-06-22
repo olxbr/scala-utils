@@ -3,6 +3,8 @@
 
 `scala-utils` is an utility library that attempts to add useful code rapidly in your development pipeline, so that you can focus on what is really needed. It does not replace any existing library, instead it allows you to add production-ready features.
 
+Code quality: [Sonar](https://sonarcloud.io/project/overview?id=olxbr_scala-utils)
+
 ## Features
 
 - **Logging**: Add features such as a configurable GELF log formatter without the need of a full Graylog connector library (https://github.com/grupozap/scala-utils/tree/master/src/main/scala/com/grupozap/scalautils/logging)
